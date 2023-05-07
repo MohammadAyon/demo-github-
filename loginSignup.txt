@@ -1,0 +1,83 @@
+fun main() {
+    val users = mutableMapOf<String, User>()
+
+    while (true) {
+        println("Welcome to Adda dei")
+        println("Choose an option:")
+        println("1. Sign up")
+        println("2. Log in")
+        val option = readLine()?.toIntOrNull()
+
+        when (option) {
+            1 -> {
+                println("Please provide your information to sign up:")
+                print("Username: ")
+                val username = readLine()!!
+
+                print("First name: ")
+                val firstName = readLine()!!
+
+                print("Last name: ")
+                val lastName = readLine()!!
+
+                print("Email address (format: first.last@northsouth.edu): ")
+                val email = readLine()!!
+
+                if (!isValidEmail(email)) {
+                    println("Error: please use an email address in the format first.last@northsouth.edu")
+                    continue
+                }
+
+                print("Password (at least 5 characters): ")
+                val password = readLine()!!
+
+                if (password.length < 5) {
+                    println("Error: password must have at least 5 characters")
+                    continue
+                }
+
+                val user = User(username, firstName, lastName, email, password)
+                users[email] = user
+
+                println("Account creation complete!")
+            }
+            2 -> {
+                print("Enter your username: ")
+                val username = readLine()!!
+
+                print("Enter your email address: ")
+                val email = readLine()!!
+
+                val user = users[email]
+
+                print("Password (at least 5 characters): ")
+                val password = readLine()!!
+
+
+                if (user == null || user.username != username) {
+                    println("Error: user not found")
+                    continue
+                }
+
+                println("Welcome to Adda dei ${user.firstName} ${user.lastName}!")
+                return
+            }
+            else -> {
+                println("Invalid option, please try again.")
+            }
+        }
+    }
+}
+
+data class User(
+    val username: String,
+    val firstName: String,
+    val lastName: String,
+    val email: String,
+    val password: String
+)
+
+fun isValidEmail(email: String): Boolean {
+    val regex = Regex("[a-zA-Z]+\\.[a-zA-Z]+@northsouth.edu")
+    return regex.matches(email)
+}
