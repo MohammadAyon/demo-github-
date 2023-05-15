@@ -1,0 +1,78 @@
+data class Profile(val name: String, val studentId: String, val batch: String, val profileUrl: String, val interests: List<String>)
+
+val profiles = mutableListOf<Profile>()
+
+fun main() {
+    while (true) {
+        println("Welcome to Adda dei")
+        println("Please choose an option:")
+        println("1. Create a new profile")
+        println("2. Search for friends with similar interests")
+        println("3. Quit")
+
+        when (readLine()?.toIntOrNull()) {
+            1 -> createProfile()
+            2 -> searchFriends()
+            3 -> {
+                println("Goodbye!")
+                return
+            }
+            else -> println("Invalid option, please try again")
+        }
+    }
+}
+
+fun createProfile() {
+    println("Please enter your name:")
+    val name = readLine()?.trim() ?: ""
+
+    var studentId = ""
+    while (studentId.length != 10) {
+        println("Please enter your student ID must have 10 digits:")
+        studentId = readLine()?.trim() ?: ""
+        if (studentId.length < 10) {
+            println("Error: ID must have at least 10 digits")
+        }
+        else if (profiles.any { it.studentId == studentId }) {
+            println("Error: Student ID is already in use")
+            return
+        }
+    }
+
+    println("Please enter your batch no ")
+    val batch = readLine()?.trim() ?: ""
+
+    println("Please enter the URL of your profile picture:")
+    val profileUrl = readLine()?.trim() ?: ""
+
+    if (profiles.any { it.profileUrl == profileUrl }) {
+        println("Error: Profile picture URL is already in use")
+        return
+    }
+
+    println("Please enter your interests  Favourite music band,Favourite Food,Hobby ")
+    val interests = readLine()?.split(",")?.map { it.trim() } ?: emptyList()
+
+    val profile = Profile(name, studentId, batch, profileUrl, interests)
+    profiles.add(profile)
+
+    println("Profile created successfully ")
+}
+
+fun searchFriends() {
+    println("Please enter your interests  Favourite music band, Favourite Food,Hobby")
+    val interests = readLine()?.split(",")?.map { it.trim() } ?: emptyList()
+
+    val matchingProfiles = profiles.filter { profile ->
+        profile.interests.any { interests.contains(it) }
+    }
+
+    if (matchingProfiles.isEmpty()) {
+        println("No matching profiles found")
+    } else {
+        println("Matching profiles:")
+        matchingProfiles.forEach { profile ->
+            println("- ${profile.name}")
+        }
+    }
+}
